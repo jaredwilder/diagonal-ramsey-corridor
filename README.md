@@ -1,138 +1,144 @@
-# diagonal-ramsey-corridor
+# Diagonal Ramsey corridor
 
-**A 23-card research program on the asymptotics of the diagonal Ramsey number — including an
-unconditional transfer principle for Erdős's own \$100 question, a precise conditional route that
-would settle it, and two barrier cards that measure exactly how far the route falls short.**
+**A 23-card research program on the exponential growth of diagonal Ramsey numbers: an unconditional thin-corridor equivalence, exact structural lemmas, a precise conditional route to existence of the exponential limit, and quantitative barriers measuring what that route still lacks.**
 
 Author: Jared Wilder. Cards dated 2026. First public timestamp: 2026-09-11.
 
-**Nothing here closes anything.** Whether `lim R(k)^{1/k}` exists is open, and this does not decide
-it. What is here is a program that states its own conditionals and then quantifies its own gap.
-
-Every constant below was **recomputed independently on 2026-09-11** and matches the cards to ten
-decimal places.
-
----
+The central open question is whether `lim R(k)^(1/k)` exists. This repository does not assume that conclusion; it develops exact reductions and construction machinery around it.
 
 ## The unconditional core
 
-**P01 — Thin-Corridor Ramsey Inequality.** For integers `n > a ≥ 0`,
+### P01 — Thin-Corridor Ramsey Inequality
 
-```
-r(n−a, n)  ≤  R(n)  ≤  4^a · r(n−a, n)
-```
+For integers `n>a>=0`,
 
-Proof on the card: iterate `r(s,t) ≤ r(s−1,t) + r(s,t−1)` from `(n,n)`, halting each branch when a
-coordinate reaches `n−a`. Branches have length at most `2a−1`, so there are fewer than `4^a` leaves.
+`r(n-a,n) <= R(n) <= 4^a r(n-a,n)`.
 
-**P02 — Thin-Corridor Equivalence.** If `a_n = o(n)` then
+The upper bound follows by iterating the standard Ramsey recursion from `(n,n)` and stopping each branch when one coordinate reaches `n-a`.
 
-```
-(1/n)·log R(n) − (1/n)·log r(n−a_n, n)  →  0
-```
+### P02 — Thin-Corridor Equivalence
 
-and therefore
+If `a_n=o(n)`, then
 
-```
-limsup R(n)^{1/n} = limsup r(n−a_n, n)^{1/n}
-liminf R(n)^{1/n} = liminf r(n−a_n, n)^{1/n}
-```
+`(1/n) log R(n) - (1/n) log r(n-a_n,n) -> 0`.
 
-**Convergence on any one sublinear corridor is equivalent to convergence on the diagonal.** It
-follows from P01 by dividing `0 ≤ log R(n) − log r(n−a_n,n) ≤ a_n log 4 = o(n)` by `n`.
+Hence diagonal and sublinear off-diagonal corridors have the same exponential limsup and liminf. In particular, convergence along **any one sublinear corridor** is equivalent to convergence on the diagonal.
 
-This is the card worth reading. Whether `lim R(k)^{1/k}` exists is a question Erdős offered \$100
-for, and P02 says the entire sublinear off-diagonal corridor is exponentially interchangeable with
-the diagonal for that purpose.
+This is the program's cleanest transfer principle: the diagonal exponential-limit question can be studied on a whole `o(n)` off-diagonal corridor without changing the exponential scale.
 
-**P03.** With `h(N) = min_{|V(G)|=N} max{ω(G), α(G)}`, we have `R(k) > N ⟺ h(N) < k`.
+### P03 — inverse homogeneous-set formulation
 
-**P04 — Clone Saturation.** In any red/blue colouring of `K_{R(k)−1}` with no monochromatic `K_k`,
-every vertex lies in a red `K_{k−1}` and a blue `K_{k−1}`. Proved by cloning `v`, colouring `vv'`
-red, using the resulting `K_{R(k)}`, then repeating with `vv'` blue. The card does not claim
-novelty, and this is likely folklore.
+With
 
-## The conditional route
+`h(N)=min_{|V(G)|=N} max{omega(G),alpha(G)}`,
 
-**P06 (unconditional).** A binary operation on witnesses that multiplies vertex counts and satisfies
-the stated near-additivity can be parenthesised so that `M_q ≤ qK(1 + O(1/log K))`, uniformly in
-`q ≥ 1`. Dyadic doubling; the cumulative log distortion is `O(Σ_j (log K + j log 2)^{-2}) =
-O(1/log K)`.
+one has
 
-**P07 (conditional, and labelled `CHECKABLE-CONDITIONAL`).** Put `A(k) = R(k) − 1`. **If** there are
-constants `C, k₀` such that for all `m,n ≥ k₀` there is an integer `0 ≤ E(m,n) ≤ C(m+n)/log²(m+n)`
-with `A(m+n+E(m,n)) ≥ A(m)A(n)`, **then `lim R(k)^{1/k}` exists.** A Fekete-style argument over P06.
+`R(k)>N iff h(N)<k`,
 
-The card says outright that this proves the implication and **not** the hypothesis.
+and the diagonal exponential limit can be translated into the corresponding asymptotic for `h(N)/log N`.
 
-**P09.** Taking Bradač's `r(s,Cs) ≥ 2^{(1−1/(2C))s}` as input and optimising through P08:
+### P04 — clone saturation
 
-| quantity | value | recomputed |
-|---|---|---|
-| `C* = (1+√3)/2` | 1.3660254038 | ✓ |
-| `f(C*) = 4 − 2√3` | 0.5358983849 | ✓ |
-| conditional diagonal base `2^{4−2√3}` | **1.4498447106** | ✓ |
-| `> √2 = 1.4142135624` | yes | ✓ |
+In a red/blue colouring of `K_(R(k)-1)` with no monochromatic `K_k`, every vertex lies in both a red and a blue `K_(k-1)`. This is an exact extremal-structure lemma; historical novelty is not asserted.
 
-The algebra is unconditional; the Ramsey conclusion is conditional on P08.
+## Conditional route to the limit
 
-## The barriers — the part that makes this worth keeping
+### P06 — summable composition-error accumulation
 
-Two cards, both marked `DIAGNOSTIC`, measure how far the architecture falls short of its own target.
+If a witness operation multiplies vertex counts while its parameter incurs only a sufficiently small `O(t/log^2 t)` additive loss, repeated balanced composition accumulates only `1+O(1/log K)` relative distortion.
 
-**P19.** A proof using only `N^t` candidate ordered tuples with `N = 2^{βt+o(t)}` under a raw-count
-plus uniform-rank architecture **cannot close for β > 1/2**. At the Bradač-complementary optimum
-`β = 4 − 2√3`, so the missing structural entropy dividend is at least
+### P07 — approximate supermultiplicativity criterion
 
-```
-β − 1/2  =  7/2 − 2√3  =  0.0358983849
-```
+Put `A(k)=R(k)-1`. If, for all sufficiently large `m,n`, there exists
 
-**recomputed, and it equals `(4−2√3) − 0.5` exactly.**
+`0 <= E(m,n) <= C(m+n)/log^2(m+n)`
 
-**P20.** For `p₁ ~ t/(1+C)` and `p₂ ~ Ct/(1+C)`, two cross matrices carry
-`2p₁p₂ ~ (2C/(1+C)²)t²` bits. At `C*` that coefficient is
+such that
 
-```
-2C*/(1+C*)²  =  0.4880338717
-```
+`A(m+n+E(m,n)) >= A(m)A(n)`,
 
-against the target exponent `0.5358983848`, a shortfall of **0.0478645131**. Both recomputed and
-both match the cards digit for digit.
+then
 
-A program that computes the size of its own gap is rarer, and more useful, than one that announces
-a win.
+`lim R(k)^(1/k)`
 
-## The construction machinery
+exists.
 
-**P10.** For `p ≥ 1`, `D_p` has `V(D_p) = {(a,b) ∈ (F₂^p \ {0})² : a·b = 1}` with an arc
-`(a,b) → (a',b')` iff `a·b' = 0`. Then `D_p` is loopless, `T_{p+1}`-free, has exactly
-`(2^p − 1)2^{p−1}` vertices, and `|D_{p₁+p₂+1}| / (|D_{p₁}||D_{p₂}|) → 8`.
+The implication is proved in the program. The approximate-supermultiplicativity hypothesis is the missing theorem.
 
-**P22.** The valid-pair incidence graph `H_p` is `2^{p−1}`-regular, so a bijection `π` exists with
-`a·π(a) = 1` for every `a ≠ 0`. P23 builds the matching-restricted digraph from it.
+### P09 — optimized conditional base
 
-P11–P18 and P21 carry the product, arc-pattern and rank machinery. Fourteen of the twenty-three
-cards carry a proof body; the rest carry statements only.
+Combining the complementary off-diagonal route with the stated Bradač fixed-ratio lower bound gives
 
-## A discrepancy the program recorded against a preprint
+`C*=(1+sqrt(3))/2`,
 
-The P10 card notes that **arXiv:2605.28793v3, Lemma 3.1** displays an exact vertex count that
-instead equals the ordered orthogonal-pair count. It then says explicitly that this packet **does
-not rely on that displayed count**, and that the discrepancy is lower-order and does not affect the
-paper's quoted exponential asymptotics.
+`f(C*)=4-2sqrt(3)`,
 
-That is recorded here as the card records it — as a noted discrepancy, not as a correction anyone
-has adjudicated.
+and conditional diagonal base
 
-## Status labels, as the bank assigns them
+`2^(4-2sqrt(3)) = 1.4498447106... > sqrt(2)`.
 
-`PROVED-IN-SESSION` means proved inside the session that produced it, not refereed and not checked
-against the literature. `CHECKABLE-CONDITIONAL` means an implication whose hypothesis is open.
-`DIAGNOSTIC` means a barrier measurement, not a theorem about Ramsey numbers.
+These constants were independently recomputed during release and match the cards.
 
-**No novelty is claimed for any card here.** Several of these are the kind of statement a specialist
-may recognise immediately; P04 in particular is probably folklore, and the card says so.
+## Quantitative barriers
+
+The program does not merely state that the composition route is unfinished; it quantifies two deficits.
+
+### P19 — raw-count / uniform-rank barrier
+
+For a proof architecture with `N=2^(beta t+o(t))` candidate tuples and at most one independent binary equation per unordered pair, the raw first-moment exponent becomes
+
+`(beta-1/2)t^2+o(t^2)`.
+
+At the complementary optimum `beta=4-2sqrt(3)`, the missing structural entropy gain is at least
+
+`7/2 - 2sqrt(3) = 0.0358983849...`.
+
+This is an architecture-specific negative theorem, not a global impossibility result.
+
+### P20 — two-cross-matrix information ceiling
+
+At `C*`, two cross matrices supply asymptotic coefficient
+
+`2C*/(1+C*)^2 = 0.4880338717...`
+
+against target exponent
+
+`0.5358983848...`,
+
+a shortfall of
+
+`0.0478645131...`.
+
+Again, this diagnoses the investigated construction rather than all possible Ramsey compositions.
+
+## Construction and rank machinery
+
+The remaining cards develop the route in detail:
+
+- **P10:** an explicit binary nonedge-polarity digraph `D_p`, loopless and `T_(p+1)`-free, with exact size `(2^p-1)2^(p-1)`;
+- **P11–P13:** tagged direct sums, XOR arc identities, pattern-collision formulas and triangular orthogonality;
+- **P14:** exact tensor-flag rank formula;
+- **P15–P18:** bilinear mixer algebra, affine equation systems and rank-weighted first moments;
+- **P21:** exact large independent coordinate fibers in the full Cartesian mixed product, falsifying that unthinned construction;
+- **P22:** perfect matching in the valid-pair incidence graph;
+- **P23:** matching-restricted polarity digraph eliminating the repeated-coordinate fibers.
+
+Fourteen of the 23 cards include proof bodies; the remainder are conditional statements, diagnostics or recorded targets as labelled in the bank.
+
+## Literature / discrepancy note
+
+P10 records a discrepancy with a displayed finite-count formula in arXiv:2605.28793v3, Lemma 3.1. This repository does not rely on that displayed count, and the source card says the discrepancy is lower-order for the paper's quoted exponential asymptotics. The note is preserved as an observation rather than an adjudicated correction to the external paper.
+
+## Evidence state
+
+`PROVED-IN-SESSION` means the supplied card contains an argument for its stated scope; `CHECKABLE-CONDITIONAL` means the implication is established while its named hypothesis is not; `DIAGNOSTIC` denotes an architecture-specific barrier.
+
+Historical novelty has not been globally adjudicated. Those literature questions are separate from the exact statements and calculations recorded here.
+
+## Provenance
+
+Earlier copies remain in `erdos-theorems/erdos77-ramsey-limit/` and the public intake archive. This repository is now the preferred human/citation home for the diagonal-corridor program.
 
 ## License
 
