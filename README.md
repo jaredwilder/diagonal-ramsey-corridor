@@ -1,145 +1,130 @@
 # Diagonal Ramsey corridor
 
-**A 23-card research program on the exponential growth of diagonal Ramsey numbers: an unconditional thin-corridor equivalence, exact structural lemmas, a precise conditional route to existence of the exponential limit, and quantitative barriers measuring what that route still lacks.**
+Let `R(n)=r(n,n)` be the diagonal Ramsey number. This repository studies whether the exponential growth rate
 
-Author: Jared Wilder. Cards dated 2026. First public timestamp: 2026-09-11.
+\[
+\lim_{n\to\infty}R(n)^{1/n}
+\]
 
-The central open question is whether `lim R(k)^(1/k)` exists. This repository does not assume that conclusion; it develops exact reductions and construction machinery around it.
+exists, by transferring the problem to sublinear off-diagonal corridors and isolating an approximate-composition theorem that would force the limit.
 
-## The unconditional core
-
-### P01 — Thin-Corridor Ramsey Inequality
+## Thin-corridor inequality
 
 For integers `n>a>=0`,
 
-`r(n-a,n) <= R(n) <= 4^a r(n-a,n)`.
+\[
+\boxed{r(n-a,n)\le R(n)\le4^a r(n-a,n)}.
+\]
 
-The upper bound follows by iterating the standard Ramsey recursion from `(n,n)` and stopping each branch when one coordinate reaches `n-a`.
-
-### P02 — Thin-Corridor Equivalence
+The upper bound follows by iterating the standard Ramsey recursion and stopping each branch when one coordinate reaches `n-a`.
 
 If `a_n=o(n)`, then
 
-`(1/n) log R(n) - (1/n) log r(n-a_n,n) -> 0`.
+\[
+\frac1n\log R(n)-\frac1n\log r(n-a_n,n)\to0.
+\]
 
-Hence diagonal and sublinear off-diagonal corridors have the same exponential limsup and liminf. In particular, convergence along **any one sublinear corridor** is equivalent to convergence on the diagonal.
+Therefore every sublinear off-diagonal corridor has the same exponential limsup and liminf as the diagonal. In particular:
 
-This is the program's cleanest transfer principle: the diagonal exponential-limit question can be studied on a whole `o(n)` off-diagonal corridor without changing the exponential scale.
+> convergence of the exponential rate along any one `o(n)` corridor is equivalent to convergence on the diagonal.
 
-### P03 — inverse homogeneous-set formulation
+This is the main unconditional reduction in the repository.
 
-With
+## Inverse homogeneous-set formulation
 
-`h(N)=min_{|V(G)|=N} max{omega(G),alpha(G)}`,
+Define
 
-one has
+\[
+h(N)=\min_{|V(G)|=N}\max\{\omega(G),\alpha(G)\}.
+\]
 
-`R(k)>N iff h(N)<k`,
+Then
 
-and the diagonal exponential limit can be translated into the corresponding asymptotic for `h(N)/log N`.
+\[
+R(k)>N\iff h(N)<k.
+\]
 
-### P04 — clone saturation
+Thus the same exponential-limit question can be expressed as an asymptotic problem for `h(N)/\log N`.
 
-In a red/blue colouring of `K_(R(k)-1)` with no monochromatic `K_k`, every vertex lies in both a red and a blue `K_(k-1)`. This is an exact extremal-structure lemma; historical novelty is not asserted.
+## A sufficient approximate-composition theorem
 
-## Conditional route to the limit
+Put `A(k)=R(k)-1`. The program proves the following implication:
 
-### P06 — summable composition-error accumulation
+If for all sufficiently large `m,n` there exists
 
-If a witness operation multiplies vertex counts while its parameter incurs only a sufficiently small `O(t/log^2 t)` additive loss, repeated balanced composition accumulates only `1+O(1/log K)` relative distortion.
-
-### P07 — approximate supermultiplicativity criterion
-
-Put `A(k)=R(k)-1`. If, for all sufficiently large `m,n`, there exists
-
-`0 <= E(m,n) <= C(m+n)/log^2(m+n)`
+\[
+0\le E(m,n)\le C\frac{m+n}{\log^2(m+n)}
+\]
 
 such that
 
-`A(m+n+E(m,n)) >= A(m)A(n)`,
+\[
+A(m+n+E(m,n))\ge A(m)A(n),
+\]
 
 then
 
-`lim R(k)^(1/k)`
+\[
+\lim_{k\to\infty}R(k)^{1/k}
+\]
 
 exists.
 
-The implication is proved in the program. The approximate-supermultiplicativity hypothesis is the missing theorem.
+The missing ingredient is the approximate-supermultiplicativity inequality itself.
 
-### P09 — optimized conditional base
+## Quantified barriers to the current construction
 
-Combining the complementary off-diagonal route with the stated Bradač fixed-ratio lower bound gives
+The repository also measures why one investigated composition architecture falls short.
 
-`C*=(1+sqrt(3))/2`,
+For a candidate family with `N=2^{\beta t+o(t)}` objects and at most one independent binary constraint per unordered pair, the raw first-moment exponent is
 
-`f(C*)=4-2sqrt(3)`,
+\[
+(\beta-1/2)t^2+o(t^2).
+\]
 
-and conditional diagonal base
+At the complementary optimum `\beta=4-2\sqrt3`, this leaves a structural entropy deficit of at least
 
-`2^(4-2sqrt(3)) = 1.4498447106... > sqrt(2)`.
+\[
+\frac72-2\sqrt3
+=0.0358983849\ldots
+\]
 
-These constants were independently recomputed during release and match the cards.
+within that architecture.
 
-## Quantitative barriers
+A related two-cross-matrix calculation gives information coefficient
 
-The program does not merely state that the composition route is unfinished; it quantifies two deficits.
-
-### P19 — raw-count / uniform-rank barrier
-
-For a proof architecture with `N=2^(beta t+o(t))` candidate tuples and at most one independent binary equation per unordered pair, the raw first-moment exponent becomes
-
-`(beta-1/2)t^2+o(t^2)`.
-
-At the complementary optimum `beta=4-2sqrt(3)`, the missing structural entropy gain is at least
-
-`7/2 - 2sqrt(3) = 0.0358983849...`.
-
-This is an architecture-specific negative theorem, not a global impossibility result.
-
-### P20 — two-cross-matrix information ceiling
-
-At `C*`, two cross matrices supply asymptotic coefficient
-
-`2C*/(1+C*)^2 = 0.4880338717...`
+\[
+0.4880338717\ldots
+\]
 
 against target exponent
 
-`0.5358983848...`,
+\[
+0.5358983848\ldots,
+\]
 
-a shortfall of
+leaving a gap of
 
-`0.0478645131...`.
+\[
+0.0478645131\ldots.
+\]
 
-Again, this diagnoses the investigated construction rather than all possible Ramsey compositions.
+These are diagnostics of the specific construction, not impossibility theorems for all approaches.
 
-## Construction and rank machinery
+## Construction machinery
 
-The remaining cards develop the route in detail:
+The remaining notes develop:
 
-- **P10:** an explicit binary nonedge-polarity digraph `D_p`, loopless and `T_(p+1)`-free, with exact size `(2^p-1)2^(p-1)`;
-- **P11–P13:** tagged direct sums, XOR arc identities, pattern-collision formulas and triangular orthogonality;
-- **P14:** exact tensor-flag rank formula;
-- **P15–P18:** bilinear mixer algebra, affine equation systems and rank-weighted first moments;
-- **P21:** exact large independent coordinate fibers in the full Cartesian mixed product, falsifying that unthinned construction;
-- **P22:** perfect matching in the valid-pair incidence graph;
-- **P23:** matching-restricted polarity digraph eliminating the repeated-coordinate fibers.
+- an explicit binary nonedge-polarity digraph;
+- tagged direct sums and XOR arc identities;
+- tensor-flag rank formulas;
+- bilinear mixers and affine equation systems;
+- rank-weighted first moments;
+- a counterexample to the full Cartesian mixed-product construction;
+- a perfect-matching reduction that removes the repeated-coordinate fibres.
 
-Fourteen of the 23 cards include proof bodies; the remainder are conditional statements, diagnostics or recorded targets as labelled in the bank.
+The complete 23-card source bank is retained in the repository; 14 cards contain proof bodies, while the others are conditional reductions, diagnostics, or open targets.
 
-## Literature / discrepancy note
+The diagonal exponential-limit problem remains open. The unconditional result here is the sublinear-corridor equivalence and the exact structural machinery around the proposed composition route.
 
-P10 records a discrepancy with a displayed finite-count formula in arXiv:2605.28793v3, Lemma 3.1. This repository does not rely on that displayed count, and the source card says the discrepancy is lower-order for the paper's quoted exponential asymptotics. The note is preserved as an observation rather than an adjudicated correction to the external paper.
-
-## Evidence state
-
-`PROVED-IN-SESSION` means the supplied card contains an argument for its stated scope; `CHECKABLE-CONDITIONAL` means the implication is established while its named hypothesis is not; `DIAGNOSTIC` denotes an architecture-specific barrier.
-
-Historical novelty has not been globally adjudicated. Those literature questions are separate from the exact statements and calculations recorded here.
-
-## Provenance
-
-Earlier copies remain in `erdos-theorems/erdos77-ramsey-limit/` and the public intake archive. This repository is now the preferred human/citation home for the diagonal-corridor program.
-
-## License
-
-Apache-2.0.
+Author: Jared Wilder. License: Apache-2.0.
